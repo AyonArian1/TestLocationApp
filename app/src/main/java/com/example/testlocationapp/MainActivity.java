@@ -44,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<String> keys = new ArrayList();
-
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     keys.add(snapshot.getKey());
                     Model model = snapshot.getValue(Model.class);
                     models.add(model);
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Data lost...", Toast.LENGTH_SHORT).show();
             }
         });
-        adapter = new Adapter(MainActivity.this,models);
+        adapter = new Adapter(MainActivity.this, models);
         recyclerView.setAdapter(adapter);
 
     }
