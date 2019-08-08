@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.ColorSpace;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseReference reference;
 
-    private List<Model> models;
+    private ArrayList<Model> models;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         models = new ArrayList<>();
@@ -40,22 +43,22 @@ public class MainActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                models.clear();
-                List<String> Names = new ArrayList<>();
+                ArrayList<String> keys = new ArrayList();
+
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    keys.add(snapshot.getKey());
                     Model model = snapshot.getValue(Model.class);
                     models.add(model);
                 }
-                adapter = new Adapter(MainActivity.this,models);
-                recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                Toast.makeText(MainActivity.this, "Data lost...", Toast.LENGTH_SHORT).show();
             }
         });
-
+        adapter = new Adapter(MainActivity.this,models);
+        recyclerView.setAdapter(adapter);
 
     }
 }
